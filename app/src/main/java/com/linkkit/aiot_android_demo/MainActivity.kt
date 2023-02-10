@@ -80,10 +80,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        connectMqtt()
+
         /* 通过按键发布消息 */
         val pubButton = findViewById<Button>(R.id.publish)
         pubButton.setOnClickListener { subscribeTopic(SUB_TOPIC, "hello IoT  ${Thread.currentThread().name} " + TimeUtils.getNowString(TimeUtils.getSafeDateFormat("yyyy-MM-dd HH:mm:ss.SSS"))) }
 
+    }
+
+    private fun connectMqtt() {
         /* Mqtt建连 */
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -106,7 +111,6 @@ class MainActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
-
     }
 
     /**
