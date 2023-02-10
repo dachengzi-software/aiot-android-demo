@@ -36,6 +36,10 @@ class MainActivity : AppCompatActivity() {
         private const val HOST = "tcp://$PRODUCT_KEY.iot-as-mqtt.cn-shanghai.aliyuncs.com:443"
     }
 
+    private val mTvContent by lazy { findViewById<TextView>(R.id.tv_content) }
+
+    private val mBtnPublish by lazy { findViewById<Button>(R.id.btn_publish) }
+
     private val triple: Triple<String?, String?, String?> by lazy {
         var clientId: String? = null
         var userName: String? = null
@@ -65,8 +69,7 @@ class MainActivity : AppCompatActivity() {
                 override fun messageArrived(topic: String?, message: MqttMessage?) {
                     val msg = message?.payload?.toString(Charsets.UTF_8)
                     Log.i(TAG, "topic: $topic, msg: $msg  ${Thread.currentThread().name}")
-                    val mTextView = findViewById<TextView>(R.id.textView)
-                    mTextView.text = msg
+                    mTvContent.text = msg
                 }
 
                 override fun deliveryComplete(token: IMqttDeliveryToken?) {
@@ -83,8 +86,9 @@ class MainActivity : AppCompatActivity() {
         connectMqtt()
 
         /* 通过按键发布消息 */
-        val pubButton = findViewById<Button>(R.id.publish)
-        pubButton.setOnClickListener { subscribeTopic(SUB_TOPIC, "hello IoT  ${Thread.currentThread().name} " + TimeUtils.getNowString(TimeUtils.getSafeDateFormat("yyyy-MM-dd HH:mm:ss.SSS"))) }
+        mBtnPublish.setOnClickListener {
+            subscribeTopic(SUB_TOPIC, "hello IoT  ${Thread.currentThread().name} " + TimeUtils.getNowString(TimeUtils.getSafeDateFormat("yyyy-MM-dd HH:mm:ss.SSS")))
+        }
 
     }
 
